@@ -33,9 +33,14 @@ class GraphCutSegmentation:
         return np.asarray(seeds_img, dtype=np.uint8)
 
     def save_masked_img(self, img, mask, output_path):
-        img[~mask] *= 0
+        alpha_channel = np.where(mask, 255, 0).astype(np.uint8)
+
+        if img.shape[2] == 3:
+            img = np.dstack((img, alpha_channel))
+        else:
+            img[:, :, 3] = alpha_channel
+
         Image.fromarray(img).save(output_path)
-        print(f">>> Output saved as {output_path}")
 
     def perform_cut(self, img_arr, seeds_arr, random_mode=False, animate_mode=False):
         if not np.any(seeds_arr):
@@ -65,19 +70,3 @@ class GraphCutSegmentation:
         result_arr = self.perform_cut(img_arr, seeds_arr)
         mask = self.graph_cut.TREE == SINK
         return mask
-
-
-if __name__ == "__main__":
-    original_img_path = "samples/bird.png"
-    seeds_img_path = "samples/bird-seeds.png"
-    obj_mask_path = "bird-object-mask.png"
-    bkg_mask_path = "bird-background-mask.png"
-
-    segmenter = GraphCutSegmentation()
-
-    obj_mask = segmenter.get_object_mask(original_img_path, seeds_img_path)
-    bkg_mask = ~obj_mask
-    original_img_arr = segmenter.load_image(original_img_path, convert_to_bw=False)
-
-    segmenter.save_masked_img(original_img_arr.copy(), obj_mask, obj_mask_path)
-    segmenter.save_masked_img(original_img_arr.copy(), bkg_mask, bkg_mask_path)
