@@ -1,9 +1,11 @@
 # SegFill
 SegFill is to separate the foreground from the background in an image, using a provided mask image (seed) for guidance.
 
+Original Repo: https://github.com/DiegoBarMor/interactive-graph-cut-segmentation
+
 In the seed image:
-    - Red indicates the foreground.
-    - Blue indicates the background.
+- Red indicates the foreground.
+- Blue indicates the background.
 
 ## Example Usage
 ```
