@@ -1,4 +1,9 @@
 # SegFill
+SegFill is to separate the foreground from the background in an image, using a provided mask image (seed) for guidance.
+
+In the seed image:
+    - Red indicates the foreground.
+    - Blue indicates the background.
 
 ## Example Usage
 ```
